@@ -31,12 +31,19 @@ class PaintingAuction extends StatefulWidget {
 }
 
 class PaintingAuctionState extends State<PaintingAuction> {
+  @override
   void initState() {
     super.initState();
     for (int c = 0; c < auctionPaintings.length; c++) {
       bids.add(auctionPaintings[c].price);
     }
     startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override

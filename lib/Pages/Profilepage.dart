@@ -12,12 +12,10 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-var coinsRemaining ;
-int myAmount=0;
-
+var coinsRemaining;
+int myAmount = 0;
 
 class _ProfileState extends State<Profile> {
-
   Client httpClient;
   Web3Client ethClient;
   bool data = false;
@@ -27,9 +25,7 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
     httpClient = Client();
-    ethClient = Web3Client(
-        "https://rpc-mumbai.matic.today",
-        httpClient);
+    ethClient = Web3Client("https://rpc-mumbai.matic.today", httpClient);
     getBalance(myAddress);
   }
 
@@ -54,29 +50,33 @@ class _ProfileState extends State<Profile> {
     List<dynamic> result = await query("getBalance", []);
     coinsRemaining = result[0];
     setState(() {
-      data=true;
+      data = true;
     });
   }
 
-  Future<String> submit(String functionName , List<dynamic> args) async
-  {
-    EthPrivateKey credentials = EthPrivateKey.fromHex("a9bf134facdd642a02e1f6e008cb21901e28952c0541df466e76cb8cda3ed296");
+  Future<String> submit(String functionName, List<dynamic> args) async {
+    EthPrivateKey credentials = EthPrivateKey.fromHex(
+        "a9bf134facdd642a02e1f6e008cb21901e28952c0541df466e76cb8cda3ed296");
     DeployedContract contract = await loadContract();
     final ethFunction = contract.function(functionName);
-    final result = await ethClient.sendTransaction(credentials, Transaction.callContract(contract: contract, function: ethFunction, parameters: args) , fetchChainIdFromNetworkId: true);
+    final result = await ethClient.sendTransaction(
+        credentials,
+        Transaction.callContract(
+            contract: contract, function: ethFunction, parameters: args),
+        fetchChainIdFromNetworkId: true);
     return result;
   }
 
-  Future<String> sendCoin() async{
+  Future<String> sendCoin() async {
     var bigAmount = BigInt.from(myAmount);
-    var response = await submit("depositBalance" , [bigAmount]);
+    var response = await submit("depositBalance", [bigAmount]);
     print("Deposited");
     return response;
   }
 
-  Future<String> withdrawCoin() async{
+  Future<String> withdrawCoin() async {
     var bigAmount = BigInt.from(myAmount);
-    var response = await submit("withdrawBalance" , [bigAmount]);
+    var response = await submit("withdrawBalance", [bigAmount]);
     print("Withdrawn");
     return response;
   }
@@ -90,19 +90,17 @@ class _ProfileState extends State<Profile> {
       height: height,
       child: Stack(
         children: [
+          CustomPaint(
+            size: Size(width, height),
+            painter: CurvePainter(),
+          ),
           Padding(
             padding: EdgeInsets.only(left: width * 0.07, top: height * 0.19),
             child: Row(
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.orange,
-                  radius: 40,
-                  child: TextButton(
-                    onPressed: () {
-                      print("HELLO");
-                    },
-                    child: Container(),
-                  ),
+                  radius: width * 0.1,
                 ),
                 SizedBox(
                   width: 20,
@@ -114,9 +112,16 @@ class _ProfileState extends State<Profile> {
               ],
             ),
           ),
-          CustomPaint(
-            size: Size(width, height),
-            painter: CurvePainter(),
+          Padding(
+            padding: EdgeInsets.only(
+                left: (width * 0.15), top: height * 0.19 + width * 0.1),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(shape: CircleBorder()),
+              onPressed: () {
+                // PARTH WRITE YOUR CODE HERE TO CHANGE THE PROFILE PIC
+              },
+              child: Icon(Icons.camera_alt),
+            ),
           ),
           Align(
               alignment: Alignment.centerLeft,
@@ -155,10 +160,8 @@ class _ProfileState extends State<Profile> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)))),
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Deposit()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Deposit()));
                       },
                       child: Container(
                           width: 100,
