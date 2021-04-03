@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:model_viewer/model_viewer.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Paintings {
   final String image;
@@ -68,6 +70,59 @@ class ARModels extends StatefulWidget {
 }
 
 class _ARModelsState extends State<ARModels> {
+
+  Razorpay _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
+
+  void openCheckout() async {
+    var options = {
+      'key': 'rzp_test_RyfDbq015IzSkf',
+      'amount': 100000,
+      'name': 'Think Art',
+      'description': 'Payment',
+      'prefill': {'contact': '', 'email': 'test@razorpay.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint(e);
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    Fluttertoast.showToast(
+        msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Fluttertoast.showToast(
+        msg: "ERROR: " + response.code.toString() + " - " + response.message,
+        timeInSecForIosWeb: 4);
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -179,7 +234,151 @@ class _ARModelsState extends State<ARModels> {
                             ),
                           ],
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context){
+                                return StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter seState) {
+                                      return Container(
+                                        color: Color(0xFF737373),
+                                        height: 150,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context).canvasColor,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(15),
+                                                  topRight: Radius.circular(15)
+                                              )
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              FlatButton(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    CircleAvatar(
+                                                        child: Center(child: Icon(FlutterIcons.rupee_sign_faw5s, color: Colors.white, size: 30)),
+                                                      backgroundColor: Colors.redAccent,
+                                                      radius: 30,
+                                                    ),
+                                                    SizedBox(height: 16),
+                                                    Text('RazorPay'),
+                                                  ],
+                                                ),
+                                                onPressed: openCheckout,
+                                              ),
+                                              FlatButton(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    CircleAvatar(
+                                                      child: Center(child: Icon(FlutterIcons.chain_faw, color: Colors.white, size: 30)),
+                                                      backgroundColor: Colors.redAccent,
+                                                      radius: 30,
+                                                    ),
+                                                    SizedBox(height: 16),
+                                                    Text('ThinkArt COIN'),
+                                                  ],
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  showModalBottomSheet(
+                                                      isScrollControlled: true,
+                                                      context: context,
+                                                      builder: (context){
+                                                        return StatefulBuilder(
+                                                            builder: (BuildContext context, StateSetter seState) {
+                                                              return Container(
+                                                                color: Color(0xFF737373),
+                                                                height: 150,
+                                                                child: Container(
+                                                                  decoration: BoxDecoration(
+                                                                      color: Theme.of(context).canvasColor,
+                                                                      borderRadius: BorderRadius.only(
+                                                                          topLeft: Radius.circular(15),
+                                                                          topRight: Radius.circular(15)
+                                                                      )
+                                                                  ),
+                                                                  child: Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                                    children: [
+                                                                      Text(
+                                                                          'Are you sure you want to pay using ThinkArt Coins?',
+                                                                        style: TextStyle(
+                                                                          fontWeight: FontWeight.bold
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(height: 16),
+                                                                      Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          FlatButton(
+                                                                            child: Container(
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  'No',
+                                                                                  style: TextStyle(
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              height: 40,
+                                                                              width: 80,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(15.0),
+                                                                                color: Colors.redAccent,
+                                                                              ),
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                          ),
+                                                                          FlatButton(
+                                                                            child: Container(
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                    'Yes',
+                                                                                  style: TextStyle(
+                                                                                      fontWeight: FontWeight.bold
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              height: 40,
+                                                                              width: 80,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(15.0),
+                                                                                color: Colors.redAccent,
+                                                                              ),
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              //write code
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            });
+                                                      }
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              }
+                          );
+                        },
                       ),
                       TextButton(
                         child: Row(
