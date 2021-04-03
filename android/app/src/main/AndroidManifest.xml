@@ -2,7 +2,8 @@
     package="com.ctrlaltelite.think_art">
    <application
         android:label="think_art"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
