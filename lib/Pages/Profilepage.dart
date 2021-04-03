@@ -13,6 +13,8 @@ class Profile extends StatefulWidget {
 }
 
 var coinsRemaining ;
+int myAmount=0;
+
 
 class _ProfileState extends State<Profile> {
 
@@ -20,7 +22,6 @@ class _ProfileState extends State<Profile> {
   Web3Client ethClient;
   bool data = false;
   final myAddress = "0x20B85673252CAb8D906C11C69Ac85b6122794b8d";
-  int myAmount = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -55,6 +56,29 @@ class _ProfileState extends State<Profile> {
     setState(() {
       data=true;
     });
+  }
+
+  Future<String> submit(String functionName , List<dynamic> args) async
+  {
+    EthPrivateKey credentials = EthPrivateKey.fromHex("a9bf134facdd642a02e1f6e008cb21901e28952c0541df466e76cb8cda3ed296");
+    DeployedContract contract = await loadContract();
+    final ethFunction = contract.function(functionName);
+    final result = await ethClient.sendTransaction(credentials, Transaction.callContract(contract: contract, function: ethFunction, parameters: args) , fetchChainIdFromNetworkId: true);
+    return result;
+  }
+
+  Future<String> sendCoin() async{
+    var bigAmount = BigInt.from(myAmount);
+    var response = await submit("depositBalance" , [bigAmount]);
+    print("Deposited");
+    return response;
+  }
+
+  Future<String> withdrawCoin() async{
+    var bigAmount = BigInt.from(myAmount);
+    var response = await submit("withdrawBalance" , [bigAmount]);
+    print("Withdrawn");
+    return response;
   }
 
   @override
