@@ -1,16 +1,61 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:think_art/authentication.dart';
+import 'package:web3dart/web3dart.dart';
 
 class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
 }
 
-int coinsRemaining = 2000;
+var coinsRemaining ;
 
 class _ProfileState extends State<Profile> {
+
+  Client httpClient;
+  Web3Client ethClient;
+  bool data = false;
+  final myAddress = "0x20B85673252CAb8D906C11C69Ac85b6122794b8d";
+  int myAmount = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    httpClient = Client();
+    ethClient = Web3Client(
+        "https://rpc-mumbai.matic.today",
+        httpClient);
+    getBalance(myAddress);
+  }
+
+  Future<DeployedContract> loadContract() async {
+    String abi = await rootBundle.loadString("assets/abi.json");
+    String contractAddress = "0xeA5F86c31dBCe98d10b62529d328b206190756C9";
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "TAZcoin"),
+        EthereumAddress.fromHex(contractAddress));
+    return contract;
+  }
+
+  Future<List<dynamic>> query(String functionName, List<dynamic> args) async {
+    final contract = await loadContract();
+    final ethFunction = contract.function(functionName);
+    final result = await ethClient.call(
+        contract: contract, function: ethFunction, params: args);
+    return result;
+  }
+
+  Future<void> getBalance(String targetaddress) async {
+    EthereumAddress address = EthereumAddress.fromHex(targetaddress);
+    List<dynamic> result = await query("getBalance", []);
+    coinsRemaining = result[0];
+    setState(() {
+      data=true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -65,11 +110,11 @@ class _ProfileState extends State<Profile> {
                       style: TextStyle(
                           color: Colors.red[400],
                           fontSize: width * 0.05,
-                          fontWeight: FontWeight.w400))
+                          fontWeight: FontWeight.w700))
                 ])),
               )),
           Padding(
-            padding: EdgeInsets.only(top: height * 0.3),
+            padding: EdgeInsets.only(top: height * 0.35),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -98,7 +143,11 @@ class _ProfileState extends State<Profile> {
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)))),
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          getBalance(myAddress);
+                        });
+                      },
                       child: Container(
                           width: 100,
                           height: 50,
