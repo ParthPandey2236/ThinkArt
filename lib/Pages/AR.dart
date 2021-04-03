@@ -45,7 +45,7 @@ class _ARModelsState extends State<ARModels> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 10,
             crossAxisSpacing: 8,
-            crossAxisCount: 1,
+            crossAxisCount: 2,
           ),
           itemBuilder: (BuildContext context, int index) {
             return Column(

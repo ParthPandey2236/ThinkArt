@@ -8,19 +8,19 @@ class CircularNavBar extends StatefulWidget {
 }
 
 int index = 0;
-final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
 
 class _CircularNavBarState extends State<CircularNavBar> {
+  final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (index == 1)
-          ? Container(
+      body: (index == 0)
+          ? ARModels()
+          : Container(
               child: Center(
                 child: Text("Another page"),
               ),
-            )
-          : ARModels(),
+            ),
       floatingActionButton: FabCircularMenu(
         animationCurve: Curves.easeInOutQuint,
         fabCloseColor: Colors.red[400],
@@ -52,7 +52,9 @@ class _CircularNavBarState extends State<CircularNavBar> {
                 setState(() {
                   index = 0;
                 });
-                fabKey.currentState.close();
+                if (fabKey.currentState.isOpen) {
+                  fabKey.currentState.close();
+                }
               }),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -68,7 +70,9 @@ class _CircularNavBarState extends State<CircularNavBar> {
                 setState(() {
                   index = 1;
                 });
-                fabKey.currentState.close();
+                if (fabKey.currentState.isOpen) {
+                  fabKey.currentState.close();
+                }
               }),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -84,7 +88,9 @@ class _CircularNavBarState extends State<CircularNavBar> {
                 setState(() {
                   index = 2;
                 });
-                fabKey.currentState.close();
+                if (fabKey.currentState.isOpen) {
+                  fabKey.currentState.close();
+                }
               }),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -100,7 +106,9 @@ class _CircularNavBarState extends State<CircularNavBar> {
                 setState(() {
                   index = 3;
                 });
-                fabKey.currentState.close();
+                if (fabKey.currentState.isOpen) {
+                  fabKey.currentState.close();
+                }
               }),
         ],
       ),
