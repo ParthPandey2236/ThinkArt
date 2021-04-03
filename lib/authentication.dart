@@ -8,6 +8,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:think_art/Pages/NavBar.dart';
 import 'main.dart';
 
 String select = "Student";
@@ -19,8 +20,8 @@ class Authentication extends StatefulWidget {
 }
 
 class _AuthenticationState extends State<Authentication> {
-
-  CollectionReference userRefrence = FirebaseFirestore.instance.collection('Users');
+  CollectionReference userRefrence =
+      FirebaseFirestore.instance.collection('Users');
   String password = '';
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
   Future<String> _loginUser(LoginData data) {
@@ -28,6 +29,7 @@ class _AuthenticationState extends State<Authentication> {
       return null;
     });
   }
+
   Future<String> _recoverPassword(String name) {
     return Future.delayed(loginTime).then((_) {
       return null;
@@ -50,7 +52,7 @@ class _AuthenticationState extends State<Authentication> {
         body: Stack(
           children: [
             Container(
-              height: h/1.2,
+              height: h / 1.2,
               width: w,
               child: RotatedBox(
                 quarterTurns: 0,
@@ -71,22 +73,20 @@ class _AuthenticationState extends State<Authentication> {
                   Text(
                     "Welcome ",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 36,
-                      fontFamily: 'Fredoka One',
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 4
-                    ),
+                        color: Colors.white,
+                        fontSize: 36,
+                        fontFamily: 'Fredoka One',
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 4),
                   ),
                   Text(
                     "Back ",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 36,
-                      fontFamily: 'Fredoka One',
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 4
-                    ),
+                        color: Colors.white,
+                        fontSize: 36,
+                        fontFamily: 'Fredoka One',
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 4),
                   ),
                 ],
               ),
@@ -124,7 +124,7 @@ class _AuthenticationState extends State<Authentication> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoggedInWidget()));
+                              builder: (context) => CircularNavBar()));
                     } else {
                       print('unsucsessful');
                     }
@@ -148,8 +148,10 @@ class _AuthenticationState extends State<Authentication> {
                       })
                       .then((value) => print('user Added'))
                       .catchError((error) => print('Failed to add'));
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Authentication()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Authentication()));
                 } catch (e) {
                   print(e);
                 }
@@ -160,50 +162,6 @@ class _AuthenticationState extends State<Authentication> {
                 return _recoverPassword(email);
               },
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class LoggedInWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Logged In',
-              style: TextStyle(color: Colors.black),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Email: ' + email,
-              style: TextStyle(color: Colors.black),
-            ),
-            SizedBox(height: 8),
-            Text(
-              '👉👌',
-              style: TextStyle(color: Colors.black, fontSize: 64),
-            ),
-            SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () async {
-                FirebaseAuth.instance.signOut();
-                final prefs = await SharedPreferences.getInstance();
-                prefs.remove('think_art_email');
-                main();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Authentication()));
-              },
-              child: Text('Logout'),
-            )
           ],
         ),
       ),
