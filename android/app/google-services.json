@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "508686447517",
+    "project_id": "think-art",
+    "storage_bucket": "think-art.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508686447517:android:42d3b1d851e38067c13574",
+        "android_client_info": {
+          "package_name": "com.ctrlaltelite.think_art"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508686447517-23ujsl7k63cui25c9p8v9492u5gcjkii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtMKkGJeC44cKsTzRz5J0cRstQ7uw6nA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508686447517-23ujsl7k63cui25c9p8v9492u5gcjkii.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
