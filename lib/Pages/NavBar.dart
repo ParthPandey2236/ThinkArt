@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:think_art/Pages/Profilepage.dart';
 import 'AR.dart';
+import 'order.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
 class CircularNavBar extends StatefulWidget {
@@ -29,6 +30,8 @@ class _CircularNavBarState extends State<CircularNavBar> {
         backgroundColor: Colors.transparent,
         body: (index == 1)
             ? ARModels()
+            : (index == 2)
+            ? Order()
             : (index == 4)
                 ? Profile()
                 : Container(
