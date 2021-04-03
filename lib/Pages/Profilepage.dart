@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:think_art/Pages/deposit.dart';
 import 'package:think_art/authentication.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -129,7 +130,12 @@ class _ProfileState extends State<Profile> {
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15)))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Deposit()));
+                      },
                       child: Container(
                           width: 100,
                           height: 50,
