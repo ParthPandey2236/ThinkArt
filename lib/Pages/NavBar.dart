@@ -13,104 +13,116 @@ class _CircularNavBarState extends State<CircularNavBar> {
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: (index == 0)
-          ? ARModels()
-          : Container(
-              child: Center(
-                child: Text("Another page"),
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage('images/background.jpeg'),
+        fit: BoxFit.cover,
+      )),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: (index == 0)
+            ? ARModels()
+            : Container(
+                child: Center(
+                  child: Text("Another page"),
+                ),
               ),
-            ),
-      floatingActionButton: FabCircularMenu(
-        animationCurve: Curves.easeInOutQuint,
-        fabCloseColor: Colors.red[400],
-        key: fabKey,
-        fabColor: Colors.red[400],
-        ringColor: Colors.transparent,
-        //animationDuration: const Duration(microseconds: 400),
-        alignment: Alignment.bottomRight,
-        fabOpenIcon: Icon(
-          Icons.menu,
-          color: Colors.white,
+        floatingActionButton: FabCircularMenu(
+          animationCurve: Curves.easeInOutQuint,
+          fabCloseColor: Colors.red[400],
+          key: fabKey,
+          fabColor: Colors.red[400],
+          ringColor: Colors.transparent,
+          //animationDuration: const Duration(microseconds: 400),
+          alignment: Alignment.bottomRight,
+          fabOpenIcon: Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+          fabCloseIcon: Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
+          children: [
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.red[400],
+                    padding: EdgeInsets.all(18),
+                    shape: CircleBorder()),
+                child: Icon(
+                  Icons.laptop,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.height * 0.03,
+                ),
+                onPressed: () {
+                  setState(() {
+                    index = 0;
+                  });
+                  if (fabKey.currentState.isOpen) {
+                    fabKey.currentState.close();
+                  }
+                }),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.red[400],
+                    padding: EdgeInsets.all(18),
+                    shape: CircleBorder()),
+                child: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.height * 0.03,
+                ),
+                onPressed: () {
+                  setState(() {
+                    index = 1;
+                  });
+                  if (fabKey.currentState.isOpen) {
+                    fabKey.currentState.close();
+                  }
+                }),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.red[400],
+                    padding: EdgeInsets.all(18),
+                    shape: CircleBorder()),
+                child: Icon(
+                  Icons.photo,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.height * 0.03,
+                ),
+                onPressed: () {
+                  setState(() {
+                    index = 2;
+                  });
+                  if (fabKey.currentState.isOpen) {
+                    fabKey.currentState.close();
+                  }
+                }),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.red[400],
+                    padding: EdgeInsets.all(18),
+                    shape: CircleBorder()),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.height * 0.03,
+                ),
+                onPressed: () {
+                  setState(() {
+                    index = 3;
+                  });
+                  if (fabKey.currentState.isOpen) {
+                    fabKey.currentState.close();
+                  }
+                }),
+          ],
         ),
-        fabCloseIcon: Icon(
-          Icons.close,
-          color: Colors.white,
-        ),
-        children: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.red[400],
-                  padding: EdgeInsets.all(18),
-                  shape: CircleBorder()),
-              child: Icon(
-                Icons.laptop,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.height * 0.03,
-              ),
-              onPressed: () {
-                setState(() {
-                  index = 0;
-                });
-                if (fabKey.currentState.isOpen) {
-                  fabKey.currentState.close();
-                }
-              }),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.red[400],
-                  padding: EdgeInsets.all(18),
-                  shape: CircleBorder()),
-              child: Icon(
-                Icons.edit,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.height * 0.03,
-              ),
-              onPressed: () {
-                setState(() {
-                  index = 1;
-                });
-                if (fabKey.currentState.isOpen) {
-                  fabKey.currentState.close();
-                }
-              }),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.red[400],
-                  padding: EdgeInsets.all(18),
-                  shape: CircleBorder()),
-              child: Icon(
-                Icons.photo,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.height * 0.03,
-              ),
-              onPressed: () {
-                setState(() {
-                  index = 2;
-                });
-                if (fabKey.currentState.isOpen) {
-                  fabKey.currentState.close();
-                }
-              }),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.red[400],
-                  padding: EdgeInsets.all(18),
-                  shape: CircleBorder()),
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.height * 0.03,
-              ),
-              onPressed: () {
-                setState(() {
-                  index = 3;
-                });
-                if (fabKey.currentState.isOpen) {
-                  fabKey.currentState.close();
-                }
-              }),
-        ],
       ),
     );
   }

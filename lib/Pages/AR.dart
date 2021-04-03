@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class Paintings {
   final String image;
@@ -45,30 +47,125 @@ class _ARModelsState extends State<ARModels> {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisSpacing: 10,
             crossAxisSpacing: 8,
-            crossAxisCount: 2,
+            crossAxisCount: 1,
           ),
           itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                Expanded(
-                    child: Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage(paintings[index].image),
-                    fit: BoxFit.cover,
+            return Card(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10))),
+              child: Column(
+                children: [
+                  Expanded(
+                      child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20)),
+                        image: DecorationImage(
+                          image: AssetImage(paintings[index].image),
+                          fit: BoxFit.cover,
+                        )),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                                primary: Colors.black.withOpacity(0.5)),
+                            child: Icon(
+                              FlutterIcons.expand_arrows_alt_faw5s,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PhotoShow(
+                                            image: paintings[index].image,
+                                          )));
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   )),
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Container(),
+                  SizedBox(
+                    height: 10,
                   ),
-                )),
-                Text(
-                  paintings[index].title + '\n',
-                  style: TextStyle(fontSize: width * 0.055),
-                )
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(left: 18.0),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          paintings[index].title,
+                          style: TextStyle(fontSize: width * 0.05),
+                        )),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 18.0, right: 18, top: 8),
+                    child: Divider(
+                      thickness: 1.3,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                        child: Row(
+                          children: [
+                            Icon(FlutterIcons.cart_evi),
+                            Text(
+                              "   Buy",
+                              style: TextStyle(fontSize: width * 0.04),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {},
+                      ),
+                      TextButton(
+                        child: Row(
+                          children: [
+                            Icon(FlutterIcons.eye_ant),
+                            Text(
+                              "   AR",
+                              style: TextStyle(fontSize: width * 0.04),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {},
+                      )
+                    ],
+                  )
+                ],
+              ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class PhotoShow extends StatefulWidget {
+  final String image;
+
+  const PhotoShow({Key key, this.image}) : super(key: key);
+  @override
+  _PhotoShowState createState() => _PhotoShowState();
+}
+
+class _PhotoShowState extends State<PhotoShow> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: PhotoView(
+          imageProvider: AssetImage(widget.image),
         ),
       ),
     );
