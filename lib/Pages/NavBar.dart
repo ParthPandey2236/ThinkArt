@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:think_art/Pages/Profilepage.dart';
 import 'AR.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class CircularNavBar extends StatefulWidget {
   @override
@@ -20,18 +22,20 @@ class _CircularNavBarState extends State<CircularNavBar> {
       height: height,
       decoration: BoxDecoration(
           image: DecorationImage(
-        image: AssetImage('images/background.jpeg'),
+        image: AssetImage('images/background.jpg'),
         fit: BoxFit.cover,
       )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: (index == 0)
+        body: (index == 1)
             ? ARModels()
-            : Container(
-                child: Center(
-                  child: Text("Another page"),
-                ),
-              ),
+            : (index == 4)
+                ? Profile()
+                : Container(
+                    child: Center(
+                      child: Text("Another page"),
+                    ),
+                  ),
         floatingActionButton: FabCircularMenu(
           animationCurve: Curves.easeInOutQuint,
           fabCloseColor: Colors.red[400],
@@ -55,7 +59,7 @@ class _CircularNavBarState extends State<CircularNavBar> {
                     padding: EdgeInsets.all(18),
                     shape: CircleBorder()),
                 child: Icon(
-                  Icons.laptop,
+                  FlutterIcons.blackboard_ent,
                   color: Colors.white,
                   size: MediaQuery.of(context).size.height * 0.03,
                 ),
@@ -73,7 +77,7 @@ class _CircularNavBarState extends State<CircularNavBar> {
                     padding: EdgeInsets.all(18),
                     shape: CircleBorder()),
                 child: Icon(
-                  Icons.edit,
+                  Icons.laptop,
                   color: Colors.white,
                   size: MediaQuery.of(context).size.height * 0.03,
                 ),
@@ -91,7 +95,7 @@ class _CircularNavBarState extends State<CircularNavBar> {
                     padding: EdgeInsets.all(18),
                     shape: CircleBorder()),
                 child: Icon(
-                  Icons.photo,
+                  Icons.edit,
                   color: Colors.white,
                   size: MediaQuery.of(context).size.height * 0.03,
                 ),
@@ -109,13 +113,31 @@ class _CircularNavBarState extends State<CircularNavBar> {
                     padding: EdgeInsets.all(18),
                     shape: CircleBorder()),
                 child: Icon(
-                  Icons.person,
+                  Icons.photo,
                   color: Colors.white,
                   size: MediaQuery.of(context).size.height * 0.03,
                 ),
                 onPressed: () {
                   setState(() {
                     index = 3;
+                  });
+                  if (fabKey.currentState.isOpen) {
+                    fabKey.currentState.close();
+                  }
+                }),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.red[400],
+                    padding: EdgeInsets.all(18),
+                    shape: CircleBorder()),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.height * 0.03,
+                ),
+                onPressed: () {
+                  setState(() {
+                    index = 4;
                   });
                   if (fabKey.currentState.isOpen) {
                     fabKey.currentState.close();
