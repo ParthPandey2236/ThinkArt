@@ -1,5 +1,6 @@
 # ThinkArt
 ## Bringing Imagination a Step Closer to Reality
+### (Submission for Hacktrix Hackathon) 
 
 <img src = "icon.png" height=300>
 
