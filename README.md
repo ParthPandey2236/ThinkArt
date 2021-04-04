@@ -1,16 +1,17 @@
-# think_art
+# ThinkArt
 
-A new Flutter application.
+<img src = "icon.png" height=300>
 
-## Getting Started
+ThinkArt is a flutter application based on selling of art/paintings in the digital market. In the current market , due to COVID 19, many artists have lost their jobs and also all public art galleries and public auction of paintings are closed. This is where ThinkArt comes in. This application has everything a customer wants when going to look for buying a painting in the market and also simultaneously giving buisness to the artists. This application is totally different from anything there is in the market right now with the most notable features being :- 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  -> Viewing of Art that customer wants to buy in their own 3D space (wall in house) with the help of Augmented Reality
+  
+  -> Creating Art from their imagination through passing of text with the help of AI in the app
+  
+  -> Attend public auctions of paintings and place a bid.
+  
+  -> Get a sketch drawn of their pictures by artists.
+  
+  -> Easy payment options through TAZ (A custom Blockchain based payment system which is deployed in MATIC Network)
+  
+  
