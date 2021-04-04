@@ -16,9 +16,10 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
-  CollectionReference ref = FirebaseFirestore.instance.collection('TextToImage');
+  CollectionReference ref =
+      FirebaseFirestore.instance.collection('TextToImage');
   File _image;
-  final picker=ImagePicker();
+  final picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -31,39 +32,34 @@ class _OrderState extends State<Order> {
           child: Card(
             elevation: 10,
             color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             child: Container(
-              height: h/2.8,
-              width: w/1.1,
+              height: h / 2.8,
+              width: w / 1.1,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15.0),
                   image: DecorationImage(
-                      image: NetworkImage('https://raw.githubusercontent.com/lucidrains/deep-daze/main/samples/Autumn_1875_Frederic_Edwin_Church.jpg'),
-                      fit: BoxFit.fill
-                  )
-              ),
+                      image: NetworkImage(
+                          'https://raw.githubusercontent.com/lucidrains/deep-daze/main/samples/Autumn_1875_Frederic_Edwin_Church.jpg'),
+                      fit: BoxFit.fill)),
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
                   child: Container(
                     child: Center(
                         child: Text(
-                          'Create',
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              letterSpacing: 2,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                          ),
-                        )
-                    ),
+                      'Create',
+                      style: TextStyle(
+                          color: Colors.redAccent,
+                          letterSpacing: 2,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    )),
                     height: 40,
                     width: 100,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0)
-                    ),
+                        borderRadius: BorderRadius.circular(15.0)),
                   ),
                   onPressed: () {
                     var text = '';
@@ -71,155 +67,151 @@ class _OrderState extends State<Order> {
                     showModalBottomSheet(
                         isScrollControlled: true,
                         context: context,
-                        builder: (context){
-                          return StatefulBuilder(
-                              builder: (BuildContext context, StateSetter seState) {
-                                return Container(
-                                  color: Color(0xFF737373),
-                                  height: h*3/4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Theme
-                                            .of(context)
-                                            .canvasColor,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(15),
-                                            topRight: Radius.circular(15)
-                                        )
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(24.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                        builder: (context) {
+                          return StatefulBuilder(builder:
+                              (BuildContext context, StateSetter seState) {
+                            return Container(
+                              color: Color(0xFF737373),
+                              height: h * 3 / 4,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).canvasColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15))),
+                                child: Padding(
+                                  padding: EdgeInsets.all(24.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
                                         children: [
-                                          Stack(
-                                            children: [
-                                              Center(
-                                                child: Text(
-                                                  'Painting',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Container(
-                                                  height: 200,
-                                                  width: 200,
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          image: NetworkImage(image),
-                                                          fit: BoxFit.fill
-                                                      )
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          TextField(
-                                            decoration: InputDecoration(
-                                                hintText: 'Enter the Text...'
-                                            ),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                text = value;
-                                              });
-                                            },
-                                          ),
-                                          SizedBox(
-                                            height: 16,
-                                          ),
-                                          FlatButton(
-                                            child: Container(
-                                              height: 30,
-                                              width: 125,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(15.0),
-                                                color: Colors.redAccent,
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  'Generate Painting',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold
-                                                  ),
-                                                ),
+                                          Center(
+                                            child: Text(
+                                              'Painting',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            onPressed: () {
-                                              ref.doc(text)
-                                                  .get()
-                                                  .then((DocumentSnapshot documentSnapshot) {
-                                                if (documentSnapshot.exists) {
-                                                  setState(() {
-                                                    image = documentSnapshot['Image'];
-                                                    print(image);
-                                                  });
-                                                } else {
-                                                  ref.doc(text)
-                                                      .set({
-                                                    'Text': text,
-                                                    'Image': ''
-                                                  })
-                                                      .then((value) => print('task Added'))
-                                                      .catchError((error) => print('Failed to add'));
-                                                  print('unsucsessful');
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          SizedBox(
-                                            height: 48,
                                           ),
                                           Center(
-                                            child: FlatButton(
-                                              child: Container(
-                                                height: 48,
-                                                width: 200,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.circular(15.0),
-                                                    border: Border.all(
-                                                        color: Colors.redAccent,
-                                                        width: 2
-                                                    )
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    'Order Now!',
-                                                    style: TextStyle(
-                                                        color: Colors.redAccent,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 24
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                Fluttertoast.showToast(
-                                                    msg: "Order Confirmed",
-                                                    toastLength: Toast.LENGTH_SHORT,
-                                                    gravity: ToastGravity.BOTTOM,
-                                                    timeInSecForIosWeb: 10,
-                                                    backgroundColor: Colors.black54,
-                                                    textColor: Colors.white,
-                                                    fontSize: 13.0);
-                                              },
+                                            child: Container(
+                                              height: 200,
+                                              width: 200,
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image:
+                                                          NetworkImage(image),
+                                                      fit: BoxFit.fill)),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 48,
                                           ),
                                         ],
                                       ),
-                                    ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter the Text...'),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            text = value;
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      FlatButton(
+                                        child: Container(
+                                          height: 30,
+                                          width: 125,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                            color: Colors.redAccent,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Generate Painting',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          ref.doc(text).get().then(
+                                              (DocumentSnapshot
+                                                  documentSnapshot) {
+                                            if (documentSnapshot.exists) {
+                                              setState(() {
+                                                image =
+                                                    documentSnapshot['Image'];
+                                                print(image);
+                                              });
+                                            } else {
+                                              ref
+                                                  .doc(text)
+                                                  .set({
+                                                    'Text': text,
+                                                    'Image': ''
+                                                  })
+                                                  .then((value) =>
+                                                      print('task Added'))
+                                                  .catchError((error) =>
+                                                      print('Failed to add'));
+                                              print('unsucsessful');
+                                            }
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 48,
+                                      ),
+                                      Center(
+                                        child: FlatButton(
+                                          child: Container(
+                                            height: 48,
+                                            width: 200,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                                border: Border.all(
+                                                    color: Colors.redAccent,
+                                                    width: 2)),
+                                            child: Center(
+                                              child: Text(
+                                                'Order Now!',
+                                                style: TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 24),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            Fluttertoast.showToast(
+                                                msg: "Order Confirmed",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                timeInSecForIosWeb: 10,
+                                                backgroundColor: Colors.black54,
+                                                textColor: Colors.white,
+                                                fontSize: 13.0);
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 48,
+                                      ),
+                                    ],
                                   ),
-                                );
-                              });
-                        }
-                    );
+                                ),
+                              ),
+                            );
+                          });
+                        });
                   },
                 ),
               ),
@@ -230,32 +222,28 @@ class _OrderState extends State<Order> {
           child: Card(
             elevation: 10,
             color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             child: Container(
-              height: h/2.8,
-              width: w/1.1,
+              height: h / 2.8,
+              width: w / 1.1,
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   child: Container(
                     child: Center(
                         child: Text(
-                          'Upload',
-                          style: TextStyle(
-                              color: Colors.redAccent,
-                              letterSpacing: 2,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold
-                          ),
-                        )
-                    ),
+                      'Upload',
+                      style: TextStyle(
+                          color: Colors.redAccent,
+                          letterSpacing: 2,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    )),
                     height: 40,
                     width: 100,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0)
-                    ),
+                        borderRadius: BorderRadius.circular(15.0)),
                   ),
                   onPressed: () {
                     var text = '';
@@ -263,40 +251,36 @@ class _OrderState extends State<Order> {
                     showModalBottomSheet(
                         isScrollControlled: true,
                         context: context,
-                        builder: (context){
-                          return StatefulBuilder(
-                              builder: (BuildContext context, StateSetter seState) {
-                                return Container(
-                                  color: Color(0xFF737373),
-                                  height: h*3/4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context).canvasColor,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(15),
-                                            topRight: Radius.circular(15)
-                                        )
+                        builder: (context) {
+                          return StatefulBuilder(builder:
+                              (BuildContext context, StateSetter seState) {
+                            return Container(
+                              color: Color(0xFF737373),
+                              height: h * (1 / 4),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).canvasColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15))),
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(Icons.camera),
+                                      title: Text('Camera'),
+                                      onTap: getImageViaCamera,
                                     ),
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          leading: Icon(Icons.camera),
-                                          title: Text('Camera'),
-                                          onTap: getImageViaCamera,
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.photo),
-                                          title: Text('Gallery'),
-                                          onTap: getImageViaGallery,
-                                        )
-                                      ],
-
-                                    ),
-                                  ),
-                                );
-                              });
-                        }
-                    );
+                                    ListTile(
+                                      leading: Icon(Icons.photo),
+                                      title: Text('Gallery'),
+                                      onTap: getImageViaGallery,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                        });
                   },
                 ),
               ),
@@ -306,52 +290,50 @@ class _OrderState extends State<Order> {
       ],
     );
   }
-  Future<void> getImageViaCamera() async{
+
+  Future<void> getImageViaCamera() async {
     Navigator.pop(context);
-    final pickedFile =await picker.getImage(source: ImageSource.camera);
-    if(pickedFile!=null){
-      final croppedFile=await ImageCropper.cropImage(
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      final croppedFile = await ImageCropper.cropImage(
         sourcePath: File(pickedFile.path).path,
       );
       setState(() {
-        if(croppedFile!=null){
-
-          _image=File(croppedFile.path);
+        if (croppedFile != null) {
+          _image = File(croppedFile.path);
           uploadFile(context);
-
-
-        }else{
+        } else {
           print('No file selected');
         }
       });
-    }
-    else{
+    } else {
       print('No file selected');
     }
   }
-  Future<void> getImageViaGallery() async{
+
+  Future<void> getImageViaGallery() async {
     Navigator.pop(context);
-    final pickedFile =await picker.getImage(source: ImageSource.gallery);
-    if(pickedFile!=null){
-      final croppedFile=await ImageCropper.cropImage(
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final croppedFile = await ImageCropper.cropImage(
         sourcePath: File(pickedFile.path).path,
       );
       setState(() {
-        if(croppedFile!=null){
-          _image=File(croppedFile.path);
+        if (croppedFile != null) {
+          _image = File(croppedFile.path);
           uploadFile(context);
-
-        }else{
+        } else {
           print('No file selected');
         }
       });
     }
   }
-  Future<UploadTask> uploadFile(BuildContext context) async{
-    String fileName=path.basename(_image.path);
-    Reference ref= FirebaseStorage.instance.ref().child(email).child(fileName);
+
+  Future<UploadTask> uploadFile(BuildContext context) async {
+    String fileName = path.basename(_image.path);
+    Reference ref = FirebaseStorage.instance.ref().child(email).child(fileName);
     UploadTask uploadTask = ref.putFile(_image);
-    final url1=await (await uploadTask).ref.getDownloadURL();
+    final url1 = await (await uploadTask).ref.getDownloadURL();
     print(url1.toString());
     // setState(() {
     //   CircleAvtarImage =url1.toString();
