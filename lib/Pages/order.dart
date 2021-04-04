@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,8 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:html/dom.dart' as dom;
+import 'package:html/parser.dart' as parser;
+import 'package:http/http.dart';
 import '../authentication.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class Order extends StatefulWidget {
   @override
@@ -20,6 +25,8 @@ class _OrderState extends State<Order> {
       FirebaseFirestore.instance.collection('TextToImage');
   File _image;
   final picker = ImagePicker();
+  String sketch = '';
+  String status = '';
   @override
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
@@ -64,15 +71,21 @@ class _OrderState extends State<Order> {
                   onPressed: () {
                     var text = '';
                     var image = '';
+                    setState(() {
+                      status = '';
+                    });
                     showModalBottomSheet(
                         isScrollControlled: true,
                         context: context,
                         builder: (context) {
                           return StatefulBuilder(builder:
-                              (BuildContext context, StateSetter seState) {
+                              (BuildContext context, StateSetter setState) {
+                                Timer.periodic(Duration(seconds: 2), (timer) {
+                                  setState(() {});
+                                });
                             return Container(
                               color: Color(0xFF737373),
-                              height: h * 3 / 4,
+                              height: h * 2.6 / 4,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Theme.of(context).canvasColor,
@@ -88,8 +101,13 @@ class _OrderState extends State<Order> {
                                       Stack(
                                         children: [
                                           Center(
-                                            child: Text(
+                                            child: status == '' ? Text(
                                               'Painting',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ) : Text(
+                                              'Loading...',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -139,6 +157,9 @@ class _OrderState extends State<Order> {
                                           ),
                                         ),
                                         onPressed: () {
+                                          setState(() {
+                                            status = 'call';
+                                          });
                                           ref.doc(text).get().then(
                                               (DocumentSnapshot
                                                   documentSnapshot) {
@@ -177,13 +198,11 @@ class _OrderState extends State<Order> {
                                                 borderRadius:
                                                     BorderRadius.circular(15.0),
                                                 border: Border.all(
-                                                    color: Colors.redAccent,
                                                     width: 2)),
                                             child: Center(
                                               child: Text(
                                                 'Order Now!',
                                                 style: TextStyle(
-                                                    color: Colors.redAccent,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 24),
                                               ),
@@ -227,13 +246,20 @@ class _OrderState extends State<Order> {
             child: Container(
               height: h / 2.8,
               width: w / 1.1,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                image: DecorationImage(
+                    image: NetworkImage(
+                        'https://i.pinimg.com/originals/1f/ba/f0/1fbaf09ad59c6e5721dd194cfa16669e.jpg'),
+                    fit: BoxFit.fill),
+              ),
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   child: Container(
                     child: Center(
                         child: Text(
-                      'Upload',
+                      'Sketch',
                       style: TextStyle(
                           color: Colors.redAccent,
                           letterSpacing: 2,
@@ -246,17 +272,22 @@ class _OrderState extends State<Order> {
                         borderRadius: BorderRadius.circular(15.0)),
                   ),
                   onPressed: () {
-                    var text = '';
-                    var image = '';
+                    setState(() {
+                      sketch = '';
+                      status = '';
+                    });
                     showModalBottomSheet(
                         isScrollControlled: true,
                         context: context,
                         builder: (context) {
                           return StatefulBuilder(builder:
-                              (BuildContext context, StateSetter seState) {
+                              (BuildContext context, StateSetter setState) {
+                            Timer.periodic(Duration(seconds: 2), (timer) {
+                              setState(() {});
+                            });
                             return Container(
                               color: Color(0xFF737373),
-                              height: h * (1 / 4),
+                              height: h * 3/4,
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: Theme.of(context).canvasColor,
@@ -265,6 +296,13 @@ class _OrderState extends State<Order> {
                                         topRight: Radius.circular(15))),
                                 child: Column(
                                   children: [
+                                    SizedBox(
+                                      height: 300,
+                                      child: sketch != '' ? WebView(
+                                        initialUrl: 'http://localhost:3333/templates/index.html',
+                                        javascriptMode: JavascriptMode.unrestricted,
+                                      ) : Container(child: Center(child: status == '' ? Text('Sketch') : Text('Loading...'),),),
+                                    ),
                                     ListTile(
                                       leading: Icon(Icons.camera),
                                       title: Text('Camera'),
@@ -274,7 +312,46 @@ class _OrderState extends State<Order> {
                                       leading: Icon(Icons.photo),
                                       title: Text('Gallery'),
                                       onTap: getImageViaGallery,
-                                    )
+                                    ),
+                                    SizedBox(
+                                      height: 48,
+                                    ),
+                                    Center(
+                                      child: FlatButton(
+                                        child: Container(
+                                          height: 48,
+                                          width: 200,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                              BorderRadius.circular(15.0),
+                                              border: Border.all(
+                                                  width: 2)),
+                                          child: Center(
+                                            child: Text(
+                                              'Order Now!',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 24),
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          Fluttertoast.showToast(
+                                              msg: "Order Confirmed",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 10,
+                                              backgroundColor: Colors.black54,
+                                              textColor: Colors.white,
+                                              fontSize: 13.0);
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 48,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -292,7 +369,6 @@ class _OrderState extends State<Order> {
   }
 
   Future<void> getImageViaCamera() async {
-    Navigator.pop(context);
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (pickedFile != null) {
       final croppedFile = await ImageCropper.cropImage(
@@ -312,7 +388,6 @@ class _OrderState extends State<Order> {
   }
 
   Future<void> getImageViaGallery() async {
-    Navigator.pop(context);
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final croppedFile = await ImageCropper.cropImage(
@@ -330,14 +405,33 @@ class _OrderState extends State<Order> {
   }
 
   Future<UploadTask> uploadFile(BuildContext context) async {
+    setState(() {
+      sketch = '';
+      status = 'call';
+    });
     String fileName = path.basename(_image.path);
     Reference ref = FirebaseStorage.instance.ref().child(email).child(fileName);
     UploadTask uploadTask = ref.putFile(_image);
     final url1 = await (await uploadTask).ref.getDownloadURL();
     print(url1.toString());
-    // setState(() {
-    //   CircleAvtarImage =url1.toString();
-    //   AddToFirestore(url1);
-    // });
+
+    String display = 'http://localhost:3333/templates/index.html';
+    String api = 'http://localhost:5000/?' + 'text=' + url1.toString();
+    try {
+      print('calling');
+      await http.get(api);
+
+      Response response = await http.get(display);
+      print('called');
+      dom.Document document = parser.parse(response.body);
+      setState(() {
+        sketch = 'rendered';
+      });
+    } catch (e) {
+      print('error');
+    }
+    setState(() {
+      status = '';
+    });
   }
 }

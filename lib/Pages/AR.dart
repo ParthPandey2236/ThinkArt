@@ -76,6 +76,7 @@ class ARModels extends StatefulWidget {
 
 class _ARModelsState extends State<ARModels> {
 
+  int rp_amt;
   Razorpay _razorpay;
 
   @override
@@ -99,7 +100,7 @@ class _ARModelsState extends State<ARModels> {
   void openCheckout() async {
     var options = {
       'key': 'rzp_test_RyfDbq015IzSkf',
-      'amount': 100000,
+      'amount': rp_amt,
       'name': 'Think Art',
       'description': 'Payment',
       'prefill': {'contact': '', 'email': 'test@razorpay.com'},
@@ -348,7 +349,10 @@ class _ARModelsState extends State<ARModels> {
                                                     Text('RazorPay'),
                                                   ],
                                                 ),
-                                                onPressed: openCheckout,
+                                                onPressed: () {
+                                                  rp_amt = paintings[index].price*100;
+                                                  openCheckout();
+                                                },
                                               ),
                                               FlatButton(
                                                 child: Column(
