@@ -100,6 +100,7 @@ class _DepositState extends State<Deposit> {
               showBackView: isCvvFocused,
               obscureCardNumber: true,
               obscureCardCvv: true,
+              cardBgColor: Colors.redAccent,
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -113,7 +114,7 @@ class _DepositState extends State<Deposit> {
                       cvvCode: cvvCode,
                       cardHolderName: cardHolderName,
                       expiryDate: expiryDate,
-                      themeColor: Colors.blue,
+                      themeColor: Colors.redAccent,
                       cardNumberDecoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Number',
@@ -156,7 +157,7 @@ class _DepositState extends State<Deposit> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        primary: const Color(0xff1b447b),
+                        primary: Colors.redAccent,
                       ),
                       child: Container(
                         margin: const EdgeInsets.all(8),

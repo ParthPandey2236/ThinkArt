@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:model_viewer/model_viewer.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:web3dart/web3dart.dart';
+import 'Profilepage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuctionPaintings {
   final String image;
   final String link;
   final String title;
-  double price;
+  int price;
   AuctionPaintings(this.image, this.link, this.title, this.price);
 }
 
@@ -17,13 +22,13 @@ int seconds = 01;
 int minutes = 01;
 int hours = 24;
 List<AuctionPaintings> auctionPaintings = <AuctionPaintings>[
-  AuctionPaintings('images/painting1.jpg', "Link", "Shanghai Kingdom", 2.0),
-  AuctionPaintings('images/painting2.jpg', "Link", "Forest", 3.0),
-  AuctionPaintings('images/painting3.jpg', "Link", "Aliens Lazer", 3.0),
-  AuctionPaintings('images/painting4.png', "Link", "Kung Fu panda", 1.0),
+  AuctionPaintings('images/painting1.jpg', "https://storage.echoar.xyz/raspy-thunder-0385/bea43fa2-7409-4753-a419-9e4e88ec6ba2.glb", "Shanghai Kingdom", 2),
+  AuctionPaintings('images/painting2.jpg', "https://storage.echoar.xyz/raspy-thunder-0385/09c4a5cf-97b9-47c6-ab7b-cca87706c18a.glb", "Forest", 3),
+  AuctionPaintings('images/painting3.jpg', "https://storage.echoar.xyz/raspy-thunder-0385/9e08e45b-e73a-4a3b-94b0-c03abd7b0f06.glb", "Aliens Lazer", 3),
+  AuctionPaintings('images/painting4.png', "https://storage.echoar.xyz/raspy-thunder-0385/76b8fb66-004d-4013-ae40-16c90594c2c0.glb", "Kung Fu panda", 1),
 ];
 
-List<double> bids = [];
+List<int> bids = [];
 
 class PaintingAuction extends StatefulWidget {
   @override
@@ -31,13 +36,74 @@ class PaintingAuction extends StatefulWidget {
 }
 
 class PaintingAuctionState extends State<PaintingAuction> {
+
+  Client httpClient;
+  Web3Client ethClient;
+  bool data = false;
+  final myAddress = "0x20B85673252CAb8D906C11C69Ac85b6122794b8d";
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    httpClient = Client();
+    ethClient = Web3Client("https://rpc-mumbai.matic.today", httpClient);
+    getBalance(myAddress);
     for (int c = 0; c < auctionPaintings.length; c++) {
       bids.add(auctionPaintings[c].price);
     }
     startTimer();
+  }
+
+  Future<DeployedContract> loadContract() async {
+    String abi = await rootBundle.loadString("assets/abi.json");
+    String contractAddress = "0xeA5F86c31dBCe98d10b62529d328b206190756C9";
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "TAZcoin"),
+        EthereumAddress.fromHex(contractAddress));
+    return contract;
+  }
+
+  Future<List<dynamic>> query(String functionName, List<dynamic> args) async {
+    final contract = await loadContract();
+    final ethFunction = contract.function(functionName);
+    final result = await ethClient.call(
+        contract: contract, function: ethFunction, params: args);
+    return result;
+  }
+
+  Future<void> getBalance(String targetaddress) async {
+    EthereumAddress address = EthereumAddress.fromHex(targetaddress);
+    List<dynamic> result = await query("getBalance", []);
+    coinsRemaining = result[0];
+    setState(() {
+      data = true;
+    });
+  }
+
+  Future<String> submit(String functionName, List<dynamic> args) async {
+    EthPrivateKey credentials = EthPrivateKey.fromHex(
+        "a9bf134facdd642a02e1f6e008cb21901e28952c0541df466e76cb8cda3ed296");
+    DeployedContract contract = await loadContract();
+    final ethFunction = contract.function(functionName);
+    final result = await ethClient.sendTransaction(
+        credentials,
+        Transaction.callContract(
+            contract: contract, function: ethFunction, parameters: args),
+        fetchChainIdFromNetworkId: true);
+    return result;
+  }
+
+  Future<String> sendCoin() async {
+    var bigAmount = BigInt.from(myAmount);
+    var response = await submit("depositBalance", [bigAmount]);
+    print("Deposited");
+    return response;
+  }
+
+  Future<String> withdrawCoin() async {
+    var bigAmount = BigInt.from(myAmount);
+    var response = await submit("withdrawBalance", [bigAmount]);
+    print("Withdrawn");
+    return response;
   }
 
   @override
@@ -182,29 +248,40 @@ class PaintingAuctionState extends State<PaintingAuction> {
                               },
                               child: Icon(
                                 FlutterIcons.minus_ant,
-                                color: Colors.blue,
+                                color: Colors.redAccent,
                               )),
                           Text(
-                            'TAZ ' + bids[index].toString(),
-                            style: TextStyle(color: Colors.blue),
+                            'TAZ ' + bids[index].toString() +".0",
+                            style: TextStyle(color: Colors.redAccent),
                           ),
                           TextButton(
                               onPressed: () {
                                 setState(() {
-                                  bids[index] += 1;
+                                  if(bids[index]<int.parse(coinsRemaining.toString()))
+                                      bids[index] += 1;
+                                  else
+                                    Fluttertoast.showToast(
+                                        msg: "Insufficient Balance to place a bid",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.redAccent,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
                                 });
                               },
                               child: Icon(
                                 FlutterIcons.plus_ant,
-                                color: Colors.blue,
+                                color: Colors.redAccent,
                               )),
                           TextButton(
                             child: Row(
                               children: [
-                                Icon(FlutterIcons.cart_evi),
+                                Icon(FlutterIcons.cart_evi , color: Colors.redAccent,),
                                 Text(
                                   "   Bid   ",
-                                  style: TextStyle(fontSize: width * 0.04),
+                                  style: TextStyle(fontSize: width * 0.04 , color: Colors.redAccent),
                                 ),
                               ],
                             ),
@@ -219,10 +296,10 @@ class PaintingAuctionState extends State<PaintingAuction> {
                       TextButton(
                         child: Row(
                           children: [
-                            Icon(FlutterIcons.eye_ant),
+                            Icon(FlutterIcons.eye_ant , color: Colors.redAccent,),
                             Text(
                               "   AR",
-                              style: TextStyle(fontSize: width * 0.04),
+                              style: TextStyle(fontSize: width * 0.04 , color: Colors.redAccent),
                             ),
                           ],
                         ),
@@ -320,3 +397,4 @@ class _ModelViewState extends State<ModelView> {
     );
   }
 }
+
