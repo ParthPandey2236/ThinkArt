@@ -14,4 +14,55 @@ ThinkArt is a flutter application based on selling of art/paintings in the digit
   
   -> Easy payment options through TAZ (A custom Blockchain based payment system which is deployed in MATIC Network)
   
-  
+ ## Features:
+ 
+ ### Virtual Art Gallery 
+ 
+ <p float="left">
+<img src = "thinkart_images/Gallery.png" height=300>
+</p>
+
+### Bid Palace
+
+<p float="left">
+<img src = "thinkart_images/Auction.png" height=300>
+<img src = "thinkart_images/AuctionBid.png" height=300>
+</p>
+ 
+ ### ImagiArt And Skecz
+ 
+ <p float="left">
+<img src = "thinkart_images/Auction.png" height=300>
+<img src = "thinkart_images/AuctionBid.png" height=300>
+</p>
+
+### BlockPay using TAZ Coins
+
+ <p float="left">
+<img src = "thinkart_images/ProfilePage.png" height=300>
+<img src = "thinkart_images/Deposit.png" height=300>
+ <img src = "thinkart_images/ProfilePageDep.png" height=300>
+</p>
+
+For buying
+
+<p float="left">
+<img src = "thinkart_images/Gallery.png" height=300>
+<img src = "thinkart_images/GalleryBuy.png" height=300>
+ <img src = "thinkart_images/BuyCoin2.png" height=300>
+  <img src = "thinkart_images/BuyCoin3.jpeg" height=300>
+</p>
+
+Blockchain transactions happening Simultaneously in Matic :- 
+
+ <p float="left">
+<img src = "thinkart_images/Screenshot 2021-04-04 at 1.42.39 PM.png" height=300>
+<img src = "thinkart_images/Screenshot 2021-04-04 at 1.43.07 PM.png" height=300>
+</p>
+
+### Payment using other methods 
+
+<p float="left">
+<img src = "thinkart_images/DummyPay.png" height=300>
+<img src = "thinkart_images/DummyPay2.png" height=300>
+</p>
