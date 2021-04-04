@@ -445,6 +445,15 @@ class _ARModelsState extends State<ARModels> {
                                                                                   SellCoin();
                                                                                   Navigator.pop(context);
                                                                                   paintings.remove(paintings[index]);
+                                                                                  Fluttertoast.showToast(
+                                                                                      msg: "Order Placed - "+paintings[index].title,
+                                                                                      toastLength: Toast.LENGTH_SHORT,
+                                                                                      gravity: ToastGravity.BOTTOM,
+                                                                                      timeInSecForIosWeb: 1,
+                                                                                      backgroundColor: Colors.redAccent,
+                                                                                      textColor: Colors.white,
+                                                                                      fontSize: 16.0
+                                                                                  );
                                                                                 });
                                                                               }
                                                                               else
