@@ -26,9 +26,10 @@ class _ProfileState extends State<Profile> {
   Web3Client ethClient;
   bool data = false;
   File _image;
-  final picker=ImagePicker();
-  String CircleAvtarImage=null;
-  cloud.CollectionReference UserRefrance = cloud.FirebaseFirestore.instance.collection('ProfilePicUrl');
+  final picker = ImagePicker();
+  String CircleAvtarImage = null;
+  cloud.CollectionReference UserRefrance =
+      cloud.FirebaseFirestore.instance.collection('ProfilePicUrl');
   final myAddress = "0x20B85673252CAb8D906C11C69Ac85b6122794b8d";
   @override
   void initState() {
@@ -111,7 +112,9 @@ class _ProfileState extends State<Profile> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: CircleAvtarImage==null?AssetImage('images/profile.png'):NetworkImage(CircleAvtarImage),
+                  backgroundImage: CircleAvtarImage == null
+                      ? AssetImage('images/profile.png')
+                      : NetworkImage(CircleAvtarImage),
                   radius: width * 0.1,
                 ),
                 SizedBox(
@@ -130,7 +133,7 @@ class _ProfileState extends State<Profile> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(shape: CircleBorder()),
               onPressed: displayBottomSheet,
-                // PARTH WRITE YOUR CODE HERE TO CHANGE THE PROFILE P
+              // PARTH WRITE YOUR CODE HERE TO CHANGE THE PROFILE P
               child: Icon(Icons.camera_alt),
             ),
           ),
@@ -228,10 +231,11 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-  void displayBottomSheet(){
+
+  void displayBottomSheet() {
     showModalBottomSheet(
         context: context,
-        builder: (context){
+        builder: (context) {
           return Container(
             color: Colors.black,
             height: 150,
@@ -240,9 +244,7 @@ class _ProfileState extends State<Profile> {
                   color: Theme.of(context).canvasColor,
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15)
-                  )
-              ),
+                      topRight: Radius.circular(15))),
               child: Column(
                 children: [
                   ListTile(
@@ -256,71 +258,71 @@ class _ProfileState extends State<Profile> {
                     onTap: getImageViaGallery,
                   )
                 ],
-
               ),
             ),
           );
-        }
-    );
+        });
   }
-  Future<void> getImageViaCamera() async{
+
+  Future<void> getImageViaCamera() async {
     Navigator.pop(context);
-    final pickedFile =await picker.getImage(source: ImageSource.camera);
-    if(pickedFile!=null){
-      final croppedFile=await ImageCropper.cropImage(
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      final croppedFile = await ImageCropper.cropImage(
         sourcePath: File(pickedFile.path).path,
       );
       setState(() {
-        if(croppedFile!=null){
-
-          _image=File(croppedFile.path);
+        if (croppedFile != null) {
+          _image = File(croppedFile.path);
           uploadFile(context);
-
-
-        }else{
+        } else {
           print('No file selected');
         }
       });
-    }
-    else{
+    } else {
       print('No file selected');
     }
   }
-  Future<void> getImageViaGallery() async{
+
+  Future<void> getImageViaGallery() async {
     Navigator.pop(context);
-    final pickedFile =await picker.getImage(source: ImageSource.gallery);
-    if(pickedFile!=null){
-      final croppedFile=await ImageCropper.cropImage(
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final croppedFile = await ImageCropper.cropImage(
         sourcePath: File(pickedFile.path).path,
       );
       setState(() {
-        if(croppedFile!=null){
-          _image=File(croppedFile.path);
+        if (croppedFile != null) {
+          _image = File(croppedFile.path);
           uploadFile(context);
-
-        }else{
+        } else {
           print('No file selected');
         }
       });
     }
   }
-  Future<UploadTask> uploadFile(BuildContext context) async{
-    String fileName=path.basename(_image.path);
-    Reference ref= FirebaseStorage.instance.ref().child(email).child(fileName);
+
+  Future<UploadTask> uploadFile(BuildContext context) async {
+    String fileName = path.basename(_image.path);
+    Reference ref = FirebaseStorage.instance.ref().child(email).child(fileName);
     UploadTask uploadTask = ref.putFile(_image);
-    final url1=await (await uploadTask).ref.getDownloadURL();
+    final url1 = await (await uploadTask).ref.getDownloadURL();
     //print(url1.toString());
     setState(() {
-      CircleAvtarImage =url1.toString();
+      CircleAvtarImage = url1.toString();
       AddToFirestore(url1);
     });
   }
-  Future<void> AddToFirestore(var url){
-    return UserRefrance.doc(email).set({
-      'URL' : url,
-    }).then((value)=>print('user added'))
-        .catchError((error)=> print('Failed to add User'));
+
+  Future<void> AddToFirestore(var url) {
+    return UserRefrance.doc(email)
+        .set({
+          'URL': url,
+        })
+        .then((value) => print('user added'))
+        .catchError((error) => print('Failed to add User'));
   }
+
   String setImage() {
     String mainLink = null;
     UserRefrance.doc(email)
@@ -334,8 +336,7 @@ class _ProfileState extends State<Profile> {
         });
         //  CircleAvtarImage=link.toString();
         print(CircleAvtarImage);
-      }
-      else {
+      } else {
         print('unsucsessful');
       }
     });
@@ -355,8 +356,6 @@ class CurvePainter extends CustomPainter {
     path.lineTo(0, size.height);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, size.height * 0.45);
-    // path.moveTo(0, size.height);
-    // path.lineTo(size.width, size.height);
     canvas.drawPath(path, paint);
   }
 

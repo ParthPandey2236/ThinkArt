@@ -35,7 +35,7 @@ class _CircularNavBarState extends State<CircularNavBar> {
                 ? ARModels()
                 : (index == 2)
                     ? Order()
-                    : (index == 4)
+                    : (index == 3)
                         ? Profile()
                         : Container(
                             child: Center(
@@ -119,31 +119,13 @@ class _CircularNavBarState extends State<CircularNavBar> {
                     padding: EdgeInsets.all(18),
                     shape: CircleBorder()),
                 child: Icon(
-                  Icons.photo,
-                  color: Colors.white,
-                  size: MediaQuery.of(context).size.height * 0.03,
-                ),
-                onPressed: () {
-                  setState(() {
-                    index = 3;
-                  });
-                  if (fabKey.currentState.isOpen) {
-                    fabKey.currentState.close();
-                  }
-                }),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.red[400],
-                    padding: EdgeInsets.all(18),
-                    shape: CircleBorder()),
-                child: Icon(
                   Icons.person,
                   color: Colors.white,
                   size: MediaQuery.of(context).size.height * 0.03,
                 ),
                 onPressed: () {
                   setState(() {
-                    index = 4;
+                    index = 3;
                   });
                   if (fabKey.currentState.isOpen) {
                     fabKey.currentState.close();
